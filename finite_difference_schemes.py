@@ -15,9 +15,11 @@ def central_FD_at(i, h, u, derivative=1, order=2):
         if order == 2:
             du = 1.0/(2.0 * h) * (-1.0 * u[i-1] + 1.0 * u[i+1])
         else:
-            print "not implemented!"
+            print("central_FD_at(...) with derivarive == 1 and order != 2 not implemented!")
+            quit()
     else:
-        print "not implemented!"
+        print("central_FD_at(...) with derivarive > 1 not implemented!")
+        quit()
 
     return du
 
@@ -51,8 +53,10 @@ def one_sided_forward_FD_at(i, h, u, derivative=1, order=1):
         elif order == 5:
             du = 1.0/h * (-137.0/60.0 * u[i] + 5.0 * u[i+1] - 5.0 * u[i+2] + 10.0/3.0 * u[i+3] - 5.0/4.0 * u[i+4] + 1.0/5.0 * u[i+5])
         else:
-            print "not implemented!"
+            print("one_sided_forward_FD_at(...) with derivarive == 1 and order > 5 not implemented!")
+            quit()
     else:
-        print "not implemented!"
+        print("one_sided_forward_FD_at(...) with derivarive > 1 not implemented!")
+        quit()
 
     return du

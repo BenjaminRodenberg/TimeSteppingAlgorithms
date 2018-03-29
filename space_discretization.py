@@ -43,7 +43,7 @@ def second_derivative_matrix(grid, **kwargs):
     elif type(grid) is IrregularGrid:
         return irregular_matrix_operator(grid.x, **kwargs)
     else:
-        print "unsupported grid type!"
+        print("in second_derivative_matrix(...) unsupported grid type!")
         quit()
 
 
@@ -83,7 +83,8 @@ def irregular_matrix_operator(x, **kwargs):
         # manually add it to R
         R[1] = 1.0/h**2 * kwargs.get('dirichlet_l')
     else:
-        print "insufficient boundary conditions at left boundary!"
+        print("in irregular_matrix_operator(...): insufficient boundary conditions at left boundary!")
+        quit()
 
     if 'neumann_r' in kwargs:
         # modify row and column corresponding to neumann BC at u_N
@@ -99,7 +100,8 @@ def irregular_matrix_operator(x, **kwargs):
         # manually add it to R
         R[-2] = 1.0/h**2 * kwargs.get('dirichlet_r')
     else:
-        print "insufficient boundary conditions at right boundary!"
+        print("in irregular_matrix_operator(...): insufficient boundary conditions at right boundary!")
+        quit()
 
     return A, R
 
@@ -132,7 +134,8 @@ def regular_matrix_operator(h, N, **kwargs):
         # manually add it to R
         R[1] = 1.0/h**2 * kwargs.get('dirichlet_l')
     else:
-        print "insufficient boundary conditions at left boundary!"
+        print("in regular_matrix_operator(...): insufficient boundary conditions at left boundary!")
+        quit()
 
     if 'neumann_r' in kwargs:
         # modify row and column corresponding to neumann BC at u_N
@@ -146,6 +149,7 @@ def regular_matrix_operator(h, N, **kwargs):
         # manually add it to R
         R[-2] = 1.0/h**2 * kwargs.get('dirichlet_r')
     else:
-        print "insufficient boundary conditions at right boundary!"
+        print("in regular_matrix_operator(...): insufficient boundary conditions at right boundary!")
+        quit()
 
     return A, R

@@ -15,7 +15,13 @@ import abc
 
 def estimate_coupling_neumann_BC(left_domain, u_left, right_domain, u_right):
     """
-    @type left_domain Domain
+    estimate neumann boundary condition at the coupling interface between left_domain and right_domain from existing nodal data
+    :param left_domain: left domain
+    :type left_domain: Domain
+    :param u_left: solution on left domain
+    :param left_domain: right domain
+    :type right_domain: Domain
+    :param u_right: solution on right domain
     @type right_domain Domain
     """
     # set neumann BC at coupling interface
@@ -27,7 +33,7 @@ def estimate_coupling_neumann_BC(left_domain, u_left, right_domain, u_right):
             u_neumann_coupled__ = finite_difference_schemes.central_FD_at(left_domain.u.shape[0]-1, right_domain.grid.h, u_glued, order=numeric_parameters.neumann_coupling_order)
         else: # use modified operator for non-identical mesh size
             if numeric_parameters.neumann_coupling_order != 2:
-                print "Operator of order %d is not implemented!!!" % numeric_parameters.neumann_coupling_order
+                print("Operator of order %d is not implemented!!!" % numeric_parameters.neumann_coupling_order)
                 quit()
             fraction = left_domain.grid.h / right_domain.grid.h  # normalize to right domain's meshwidth
             p = np.array([-fraction, 0, 1.0])
@@ -36,13 +42,17 @@ def estimate_coupling_neumann_BC(left_domain, u_left, right_domain, u_right):
             u = np.array([u_left[-2], u_right[0], u_right[1]])
             u_neumann_coupled__ = 1.0/right_domain.grid.h * (u.dot(c))
     else:
-        print "not implemented schemes for coupling Neumann BC demanded!"
+        print("not implemented schemes for coupling Neumann BC demanded!")
         quit()
 
     return u_neumann_coupled__
 
 
 class CouplingScheme(object):
+    """
+    abstract class defining a coupling scheme.
+    """
+
     __metaclass__ = abc.ABCMeta
 
     name = "Coupling Scheme"
@@ -53,10 +63,21 @@ class CouplingScheme(object):
 
     @abc.abstractmethod
     def perform(self, t0, tau, left_domain, right_domain):
+        """
+        abstract method to perform one coupled timestep with coupling between equation on left_domain and right_domain
+        :param t0: current time
+        :param tau: time step size
+        :param left_domain: left domain with independent model
+        :param right_domain: right domain with independent model
+        :return:
+        """
         return
 
 
 class FullyImplicitCoupling(CouplingScheme):
+    """
+    fully implicit coupling with iterative coupling
+    """
 
     name = "Fully Implicit Coupling"
 
@@ -64,12 +85,6 @@ class FullyImplicitCoupling(CouplingScheme):
         super(FullyImplicitCoupling, self).__init__()
 
     def perform(self, t0, tau, left_domain, right_domain):
-        """
-        @type left_domain Domain
-        @type right_domain Domain
-        :param t0:
-        """
-
         residual = np.inf
         tol = numeric_parameters.fixed_point_tol
         n_steps_max = numeric_parameters.n_max_fixed_point_iterations
@@ -120,7 +135,7 @@ class FullyImplicitCoupling(CouplingScheme):
             n_steps += 1
 
         if n_steps == n_steps_max:
-            print "maximum number of steps exceeded!"
+            print("maximum number of steps exceeded!")
             return False
 
         # update solution
@@ -133,6 +148,9 @@ class FullyImplicitCoupling(CouplingScheme):
 
 
 class FullyExplicitCoupling(CouplingScheme):
+    """
+    fully explicit coupling with staggered approach
+    """
 
     name = "Fully Explicit Coupling"
 
@@ -195,6 +213,9 @@ class FullyExplicitCoupling(CouplingScheme):
 
 
 class WaveformCoupling(CouplingScheme):
+    """
+    waveform coupling relying on waveform relaxation
+    """
 
     name = "Waveform Coupling"
 
@@ -295,7 +316,7 @@ class WaveformCoupling(CouplingScheme):
             u_right_new[0] = u_dirichlet_continuous_m1(t0+tau)  # we have to set the (known and changing) dirichlet value manually, since this value is not changed by the timestepping
 
             if numeric_parameters.neumann_coupling_order != 2:
-                print "Operator of order %d is not implemented!!!" % numeric_parameters.neumann_coupling_order
+                print("Operator of order %d is not implemented!!!" % numeric_parameters.neumann_coupling_order)
                 quit()
 
             fraction = left_domain.grid.h / right_domain.grid.h  # normalize to right domain's meshwidth
@@ -320,6 +341,9 @@ class WaveformCoupling(CouplingScheme):
 
 
 class ExplicitPredictorCoupling(CouplingScheme):
+    """
+    predictor coupling using a predictor scheme for the coupled participants
+    """
 
     name = "Explicit Predictor Coupling"
 
@@ -393,6 +417,9 @@ class ExplicitPredictorCoupling(CouplingScheme):
 
 
 class SemiImplicitExplicitCoupling(CouplingScheme):
+    """
+    coupling scheme using a combination of explicit and implicit coupling
+    """
 
     name = "Semi Implicit Explicit Coupling"
 
@@ -470,7 +497,7 @@ class SemiImplicitExplicitCoupling(CouplingScheme):
             n_steps += 1
 
         if n_steps == n_steps_max:
-            print "maximum number of steps exceeded!"
+            print("maximum number of steps exceeded!")
             return False
 
         # update solution
@@ -483,6 +510,9 @@ class SemiImplicitExplicitCoupling(CouplingScheme):
 
 
 class StrangSplittingCoupling(CouplingScheme):
+    """
+    coupling using Strang splitting
+    """
 
     name = "Strang Splitting Coupling"
 
@@ -565,7 +595,9 @@ class StrangSplittingCoupling(CouplingScheme):
 
 
 class MonolithicScheme(CouplingScheme):
-    # todo this class hierarchy stinks!
+    """
+    monolithic scheme for solving an equation without coupling
+    """
 
     name = "Monolithic Approach"
 

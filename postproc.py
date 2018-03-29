@@ -17,7 +17,8 @@ lines = []
 name = parser.parse_args().foldername
 plottingdir = r'./' + name
 filenames = glob.glob(plottingdir+"/*.json")
-print filenames
+print("reading from")
+print(filenames)
 
 marker_collection = ('o','x','d','s','^','<','>','v','.')
 
@@ -26,9 +27,6 @@ marker_left = itertools.cycle(marker_collection)
 plot_right = True
 if plot_right:
     marker_right = itertools.cycle(marker_collection)
-
-for filename in filenames:
-    print filename
 
 if plot_right:
     f, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=(12,9))
@@ -58,8 +56,8 @@ def concat_w_zero_padding(a,b):
 
 
 for filename in filenames:
-    print "---"
-    print filename
+    print("---")
+    print(filename)
     with open(filename) as data_file:
 
         data = json.load(data_file)

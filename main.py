@@ -38,7 +38,7 @@ def experimental_series(taus, u_ref_left, u_ref_right, experiment):
     """
     @type taus list
     """
-    print "EXPERIMENTAL SERIES"
+    print("EXPERIMENTAL SERIES")
 
     errors_left = []
     errors_right = []
@@ -46,9 +46,9 @@ def experimental_series(taus, u_ref_left, u_ref_right, experiment):
     n_experiments = taus.__len__()
 
     for tau in taus:
-        print "----"
-        print "%i of %i" % (experiment_counter, n_experiments)
-        print "tau = %f" % tau
+        print("----")
+        print("%i of %i" % (experiment_counter, n_experiments))
+        print("tau = %f" % tau)
 
         u_left, u_right = experiment(tau)
 
@@ -56,18 +56,18 @@ def experimental_series(taus, u_ref_left, u_ref_right, experiment):
         e_tot_left = np.sum(np.abs(u_left-u_ref_left)) / u_left.shape[0]
         e_tot_right = np.sum(np.abs(u_right-u_ref_right)) / (u_right.shape[0])
 
-        print "Error total = %.2e | %.2e" % (e_tot_left, e_tot_right)
+        print("Error total = %.2e | %.2e" % (e_tot_left, e_tot_right))
 
         experiment_counter += 1
         errors_left += [e_tot_left]
         errors_right += [e_tot_right]
 
-    print "----"
+    print("----")
     np.set_printoptions(formatter={'float': lambda x: format(x, '6.3E')}) # print in scientific notation
-    print repr(np.array(errors_left))
-    print repr(np.array(errors_right))
-    print taus
-    print
+    print(repr(np.array(errors_left)))
+    print(repr(np.array(errors_right)))
+    print(taus)
+    print()
 
     return errors_left, errors_right
 
@@ -145,7 +145,7 @@ def solve_monolithic_problem(tau, time_stepping_scheme, domain):
 def compute_reference_solution(domain, tau, time_integration_scheme = time_integration.ImplicitTrapezoidalRule()):
     # compute monolithic at constant spatial and very fine temporal resolution
 
-    print "REFERENCE SOLUTION for grid "+str(domain.grid.x)
+    print("REFERENCE SOLUTION for grid "+str(domain.grid.x))
 
     return solve_monolithic_problem(tau, time_integration_scheme, domain)
 
@@ -166,7 +166,7 @@ def coupling_experiment(coupling_scheme, time_stepping_schemes, left_domain, rig
     """
     if type(time_stepping_schemes) is list:
         experiment_name = time_stepping_schemes[0].name + " - " + time_stepping_schemes[1].name + " - " + coupling_scheme.name
-        print experiment_name
+        print(experiment_name)
         experiment_errors_left, experimental_errors_right = experimental_series(experiment_timesteps, u_ref_left, u_ref_right, lambda tau: solve_inhomogeneously_coupled_problem(
             tau, time_stepping_schemes, coupling_scheme, [left_domain, right_domain]))
     else:
@@ -175,7 +175,7 @@ def coupling_experiment(coupling_scheme, time_stepping_schemes, left_domain, rig
             experiment_name += " - "+coupling_scheme.name_suffix
         except AttributeError:
             pass
-        print experiment_name
+        print(experiment_name)
         experiment_errors_left, experimental_errors_right = experimental_series(experiment_timesteps, u_ref_left, u_ref_right, lambda tau: solve_coupled_problem(tau, time_stepping_schemes, coupling_scheme, left_domain, right_domain))
 
     return Experiment(experiment_name, [left_domain.grid.h, right_domain.grid.h], experiment_timesteps, experiment_errors_left, experimental_errors_right, additional_numerical_parameters=numeric_parameters.numeric_parameters_dict)
@@ -193,7 +193,7 @@ def monolithic_experiment(time_stepping_scheme, monolithic_domain, u_ref_left, u
     :return:
     """
     experiment_name = time_stepping_scheme.name + " - " + coupling_schemes.MonolithicScheme().name
-    print experiment_name
+    print(experiment_name)
     experiment_errors_left, experimental_errors_right = experimental_series(experiment_timesteps, u_ref_left, u_ref_right, lambda tau: solve_monolithic_problem(tau, time_stepping_scheme, monolithic_domain))
 
     if type(monolithic_domain.grid) is IrregularGrid:
@@ -250,7 +250,7 @@ monolithic_domain_nonregular = Domain(combined_grid_nonregular)
 u_ref_left_regular, u_ref_right_regular = compute_reference_solution(monolithic_domain_regular, tau_ref, time_integration_scheme=time_integration.RungeKutta4)
 u_ref_left_nonregular, u_ref_right_nonregular = compute_reference_solution(monolithic_domain_nonregular, tau_ref, time_integration_scheme=time_integration.RungeKutta4)
 
-print "### experimental series 1: order degradation with classical schemes on regular domain"
+print("### experimental series 1: order degradation with classical schemes on regular domain")
 
 experiments = list()
 experiments.append(monolithic_experiment(time_integration.ExplicitHeun, monolithic_domain_regular, u_ref_left_regular, u_ref_right_regular, experiment_timesteps))
@@ -261,7 +261,7 @@ experiments.append(coupling_experiment(coupling_schemes.FullyImplicitCoupling(),
 experiments.append(coupling_experiment(coupling_schemes.FullyImplicitCoupling(), time_integration.RungeKutta4, left_domain, right_domain_coarse, u_ref_left_regular, u_ref_right_regular, experiment_timesteps))
 save_experiments(experiments, 'series1_Order')
 
-print "### experimental series 2: Customized schemes Semi Implicit-Explicit coupling and Predictor coupling on regular domain"
+print("### experimental series 2: Customized schemes Semi Implicit-Explicit coupling and Predictor coupling on regular domain")
 
 experiments = list()
 experiments.append(monolithic_experiment(time_integration.ExplicitHeun, monolithic_domain_regular, u_ref_left_regular, u_ref_right_regular, experiment_timesteps))
@@ -272,7 +272,7 @@ experiments.append(coupling_experiment(coupling_schemes.ExplicitPredictorCouplin
 experiments.append(coupling_experiment(coupling_schemes.SemiImplicitExplicitCoupling(), time_integration.ImplicitTrapezoidalRule, left_domain, right_domain_coarse, u_ref_left_regular, u_ref_right_regular, experiment_timesteps))
 save_experiments(experiments, 'series2_Custom')
 
-print "### experimental series 3: Strang splitting coupling on non-regular domain"
+print("### experimental series 3: Strang splitting coupling on non-regular domain")
 
 experiments = list()
 experiments.append(monolithic_experiment(time_integration.ExplicitHeun, monolithic_domain_nonregular, u_ref_left_nonregular, u_ref_right_nonregular, experiment_timesteps))
@@ -284,7 +284,7 @@ experiments.append(coupling_experiment(coupling_schemes.StrangSplittingCoupling(
 experiments.append(coupling_experiment(coupling_schemes.StrangSplittingCoupling(), [time_integration.RungeKutta4, time_integration.ImplicitTrapezoidalRule], left_domain, right_domain_fine, u_ref_left_nonregular, u_ref_right_nonregular, experiment_timesteps))
 save_experiments(experiments, 'series3_Strang')
 
-print "### experimental series 4: Waveform relaxation coupling on non-regular domain"
+print("### experimental series 4: Waveform relaxation coupling on non-regular domain")
 
 experiments = list()
 experiments.append(monolithic_experiment(time_integration.ImplicitTrapezoidalRule, monolithic_domain_nonregular, u_ref_left_nonregular, u_ref_right_nonregular, experiment_timesteps))
