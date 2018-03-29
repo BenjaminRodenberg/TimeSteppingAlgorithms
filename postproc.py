@@ -63,32 +63,32 @@ for filename in filenames:
         data = json.load(data_file)
         taus = np.array(data['temporal_resolution'])
 
-        if data.has_key('errors_left'):
+        if 'errors_left' in data:
             errors_left = np.array(data['errors_left'])
             errors_left[errors_left > 10.0] = NAN
-            ax1.dataLim._set_x1(taus.max())
-            line = ax1.loglog(taus, errors_left, ':',marker=marker_left.next(),markerfacecolor="none",markersize=10,markeredgewidth=2)
+            #ax1.dataLim._set_x1(taus.max())
+            line = ax1.loglog(taus, errors_left, ':',marker=next(marker_left),markerfacecolor="none",markersize=10,markeredgewidth=2)
             data_left = concat_w_zero_padding(data_left, errors_left)
-        elif data.has_key('errors'):
+        elif 'errors' in data:
             errors = np.array(data['errors'])
             errors[errors > 10.0] = NAN
-            line = ax1.loglog(taus, errors, marker=marker_left.next(),markerfacecolor="none")
+            line = ax1.loglog(taus, errors, marker=next(marker_left),markerfacecolor="none")
             data_left = concat_w_zero_padding(data_left, errors)
 
-        if plot_right and data.has_key('errors_right'):
+        if plot_right and 'errors_right' in data:
             errors_right = np.array(data['errors_right'])
             errors_right[errors_right > 10.0] = NAN
-            ax2.loglog(taus, errors_right, ':',marker=marker_right.next(),markerfacecolor="none",markersize=10,markeredgewidth=2)
+            ax2.loglog(taus, errors_right, ':',marker=next(marker_right),markerfacecolor="none",markersize=10,markeredgewidth=2)
             data_right = concat_w_zero_padding(data_right, errors_right)
-        elif plot_right and data.has_key('errors'):
+        elif plot_right and 'errors' in data:
             errors = np.array(data['errors'])
             errors[errors > 10.0] = NAN
-            ax2.loglog(taus, errors, marker=marker_right.next())
+            ax2.loglog(taus, errors, marker=next(marker_right))
             data_right = concat_w_zero_padding(data_right, errors)
 
-        if data['numerical_parameters'].has_key('neumann coupling scheme'):
+        if 'neumann coupling scheme' in data['numerical_parameters']:
             legends.append(data['experiment_name'])
-        elif data['numerical_parameters'].has_key('neumann coupling order'):
+        elif 'neumann coupling order' in data['numerical_parameters']:
             legends.append(data['experiment_name']+" - FD order: "+ str(data['numerical_parameters']['neumann coupling order']))
         else:
             legends.append(data['experiment_name'])
@@ -105,7 +105,7 @@ def plot_order_line(order, ax, x_min, x_max, y_min, y_max):
     x = np.zeros(2)
     y = np.zeros(2)
 
-    size = 10.0
+    size = 2.0    
     x[0], y[0] = x_max, y_min * size**order * .1
     x[1], y[1] = 1.0/size*x_max, y_min * .1
     x *= .5
@@ -118,15 +118,15 @@ ax1.grid()
 ax1.set_title(r"error in left domain $\Omega_L$")
 ax1.set_xlabel(r"time step $\tau$")
 ax1.set_ylabel(r"error $\epsilon$")
-x_min, y_min = ax1.dataLim._get_min()
-x_max, y_max = ax1.dataLim._get_max()
+x_min, x_max = ax1.get_xlim()
+y_min, y_max = ax1.get_ylim()
 plot_order_line(1, ax1, x_min, x_max, y_min, y_max)
 plot_order_line(2, ax1, x_min, x_max, y_min, y_max)
 plot_order_line(4, ax1, x_min, x_max, y_min, y_max)
 
 if plot_right:
-    x_min, y_min = ax2.dataLim._get_min()
-    x_max, y_max = ax2.dataLim._get_max()
+    x_min, x_max = ax2.get_xlim()
+    y_min, y_max = ax2.get_ylim()
     plot_order_line(1, ax2, x_min, x_max, y_min, y_max)
     plot_order_line(2, ax2, x_min, x_max, y_min, y_max)
     plot_order_line(4, ax2, x_min, x_max, y_min, y_max)
