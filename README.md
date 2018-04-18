@@ -6,7 +6,7 @@ You can plot the results by running ```python postproc.py <foldername>```. You n
 
 # Convergence Study
 
-This code can be used to perform convergence studies in a partitioned multi-physics multi-scale setup. As a benchmark scenario the 1D heat transport equations is solved. For details see [1]. The convergence studies performed by this code are identical to the ones described in [1]. However, for a lower runtime, the discretization slightly differs for [1].
+This code can be used to perform convergence studies in a partitioned multi-physics multi-scale setup. As a benchmark scenario the 1D heat transport equations is solved. For details see [1]. The convergence studies performed by this code are identical to the ones described in [1]. However, for a lower runtime, a different discretization is used here.
 
 ## Experimental Series 1
 
