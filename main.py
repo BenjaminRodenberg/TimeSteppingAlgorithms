@@ -218,12 +218,12 @@ x1 = 1.0  # coupling interface
 x2 = 2.0  # right boundary
 
 # convergence in time: setup
-T = 1*.5**5  # maximum time
-tau0 = T*.5**2  # timestep init
-N_tau = 5  # we run experiments for all tau = tau0*(.5)**(0...N_tau)
-tau_ref = tau0*(.5)**(N_tau+1)
+T = 1  # maximum time
+tau0 = T * 0.25  # timestep init
+N_tau = 10 # we run experiments for all tau = tau0*(.5)**(0...N_tau)
+tau_ref = tau0 * 0.5 ** (N_tau+1)
 
-experiment_timesteps = [tau0 * .5 ** n for n in range(N_tau)]
+experiment_timesteps = [tau0 * 0.5 ** n for n in range(N_tau)]
 
 # spatial discretization: identical grid left and right
 N_gridpoints_left = 6
