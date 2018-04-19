@@ -6,7 +6,27 @@ You can plot the results by running ```python postproc.py <foldername>```. You n
 
 # Convergence Study
 
-This code can be used to perform convergence studies in a partitioned multi-physics multi-scale setup. As a benchmark scenario the 1D heat transport equations is solved. For details see [1]. The convergence studies performed by this code are identical to the ones described in [1]. However, for a lower runtime, a different discretization is used here.
+This code can be used to perform convergence studies in a partitioned multi-physics multi-scale setup. As a benchmark scenario the 1D heat transport equations is solved. For details see [1]. The convergence studies performed by this code are identical to the ones described in [1]. 
+
+## Parameter set from [1]
+
+If you clone this repository, you can directly perform the experiments described in [1] with the respective parameters:
+
+* maximum simulation time **T** = 1
+* largest timestep size **tau_0** = 1/4
+* considered timestep sizes **tau_i** = [1/4, 1/8, 1/16, ..., 1/1024, 1/2048]
+* coarse mesh resolution **h** = 0.2
+* coarse mesh resolution **h/4** = 0.05
+
+## Parameter set with lower runtime
+
+For a lower runtime, you can also use a modified parameter set:
+
+* maximum simulation time **T** = 1/32
+* largest timestep **tau_0** = 1/128
+* considered timestep sizes **tau_i** = [1/128, 1/256, 1/512, 1/1024, 1/2048]
+
+The plots below are created from the modified parameter set.
 
 ## Experimental Series 1
 
