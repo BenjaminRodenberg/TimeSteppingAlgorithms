@@ -16,7 +16,7 @@ If you clone this repository, you can directly perform the experiments described
 * largest timestep size **tau_0** = 1/4
 * considered timestep sizes **tau_i** = [1/4, 1/8, 1/16, ..., 1/1024, 1/2048]
 * coarse mesh resolution **h** = 0.2
-* coarse mesh resolution **h/4** = 0.05
+* fine mesh resolution **h/4** = 0.05
 
 ## Parameter set with lower runtime
 
