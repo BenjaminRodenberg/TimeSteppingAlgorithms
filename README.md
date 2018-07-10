@@ -56,4 +56,4 @@ High order if waveform relaxation coupling is used with higher order schemes on 
 
 If you want to refer to this code, please use the following reference:
 
-[1] Rüth, B., Uekermann, B., Mehl, M., & Bungartz, H.-J. (2018). Time Stepping Algorithms for Partitioned Multi-Scale Multi-Physics. In ??? Glasgow: ???
+[1] Rüth, B., Uekermann, B., Mehl, M., & Bungartz, H.-J. (2018). Time Stepping Algorithms for Partitioned Multi-Scale Multi-Physics. Proceedings of ECCM VI / ECFD VII, (June).
